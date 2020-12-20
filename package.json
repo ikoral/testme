@@ -1,0 +1,11 @@
+{
+  "name": "testme-backend",
+  "version": "1.0.0",
+  "description": "This is backend of ttl.be mock test site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ilhan koral",
+  "license": "ISC"
+}
