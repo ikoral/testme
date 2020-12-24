@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Identify Routes
-process.env.RESET_URL = "/reset";
 const users = require("./routes/users");
 app.use("/api/users", users);
 
