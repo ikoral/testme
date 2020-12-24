@@ -22,6 +22,9 @@ app.get("/", function (req, res) {
   res.send("Welcome to Chinook Enterprise");
 });
 
+// serialize random characters
+// require('crypto').randomBytes(64).toString('hex')
+
 app.listen(PORT, function () {
   console.log(`App running on localhost:${PORT}`);
 });
