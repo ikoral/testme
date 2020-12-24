@@ -180,7 +180,8 @@ routerUsers.post("/forgot", function (req, res) {
   };
 
   //TODO: bu Url nassil olacak for production
-  url = process.env.RESET_URL || "http://localhost:3000/reset";
+  // url = process.env.RESET_URL || "http://localhost:3000/reset";
+  url = "https://ttl-testme.herokuapp.com/reset";
   const resetToken = jwt.sign(user, process.env.RESET_TOKEN_SECRET, {
     expiresIn: "15m",
   });
