@@ -11,13 +11,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Identify Routes
+process.env.RESET_URL = "/reset";
 const users = require("./routes/users");
 app.use("/api/users", users);
 
 //Handle Production
 if (process.env.NODE_ENV === "production") {
   // Static Folder
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static(__dirname + "/public/"));
 
   //Handle SPA
   app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
