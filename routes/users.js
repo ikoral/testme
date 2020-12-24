@@ -179,6 +179,7 @@ routerUsers.post("/forgot", function (req, res) {
     email: req.body.email,
   };
 
+  //TODO: bu Url nassil olacak for production
   url = process.env.RESET_URL || "http://localhost:3000/reset";
   const resetToken = jwt.sign(user, process.env.RESET_TOKEN_SECRET, {
     expiresIn: "15m",
