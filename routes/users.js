@@ -124,7 +124,7 @@ routerUsers.post("/reset", function (req, res) {
     if (rows.length == 0) {
       return res.status(401).json({
         status: false,
-        message: "Sorry, wrong email",
+        message: "Sorry, you don't have registered email",
       });
     }
     // let user = rows[0];
@@ -179,9 +179,9 @@ routerUsers.post("/forgot", function (req, res) {
     email: req.body.email,
   };
 
-  //TODO: bu Url nassil olacak for production
-  // url = process.env.RESET_URL || "http://localhost:3000/reset";
-  url = "https://ttl-testme.herokuapp.com/reset";
+  //TODO: bu Url nasil olacak for production
+  url = process.env.RESET_URL || "http://localhost:3000/reset";
+  //url = "https://ttl-testme.herokuapp.com/reset";
   const resetToken = jwt.sign(user, process.env.RESET_TOKEN_SECRET, {
     expiresIn: "15m",
   });
