@@ -216,7 +216,7 @@ routerUsers.post("/login", function (req, res) {
   }
 
   let db = new sqlite3.Database(DB);
-  let sql = `SELECT firstName, lastName, email, password, roleid  from users where email='${req.body.email}'`;
+  let sql = `SELECT id, firstName, lastName, email, password, roleid  from users where email='${req.body.email}'`;
   db.all(sql, [], (err, rows) => {
     if (err) {
       throw err;
