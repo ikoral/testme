@@ -12,7 +12,18 @@ app.use(cors());
 
 // Identify Routes
 const users = require("./routes/users");
+const todos = require("./routes/todos");
 app.use("/api/users", users);
+app.use("/api/todos", todos);
+
+//Handle Production
+if (process.env.NODE_ENV === "production") {
+  // Static Folder
+  app.use(express.static(__dirname + "/public/"));
+
+  //Handle SPA
+  app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
+}
 
 // Set Application Port
 const PORT = process.env.PORT || 5000;
