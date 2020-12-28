@@ -65,19 +65,34 @@ routerTodos.post("/create", multipartMiddleware, checkToken, (req, res) => {
 });
 
 // GET ALL TODOS
-routerTodos.get("/", multipartMiddleware, function (req, res) {
-  let db = new sqlite3.Database("./database/InvoicingApp.db");
-  // let sql = `SELECT * FROM todos
-  // WHERE user_id='${req.params.user_id}'`;
+routerTodos.get("/", multipartMiddleware, checkToken, function (req, res) {
+  const user = req.user;
+  let errors = [];
 
-  let sql = `SELECT * FROM todos`;
+  // validate data
+  if (user == null) errors.push("Not valid token! You cannot get todos");
 
-  // LEFT JOIN transactions ON invoices.id=transactions.invoice_id
+  if (errors.length) {
+    res.status(401).json({
+      status: false,
+      message: errors.join(", "),
+    });
+    return;
+  }
+
+  let db = new sqlite3.Database(DB);
+  let sql = `SELECT * FROM todos
+  WHERE user_id='${req.user.id}'`;
+
   db.all(sql, [], (err, rows) => {
     if (err) {
-      throw err;
+      res.status(401).json({
+        status: false,
+        message: err.message,
+      });
+      return;
     }
-    return res.json({
+    return res.status(200).json({
       status: true,
       todos: rows,
     });
@@ -141,17 +156,20 @@ function isEmpty(strIn) {
 function checkToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return res.sendStatus(204);
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      req.user = null;
-    } else {
-      req.user = user;
-    }
-
+  if (token == null) {
+    req.user = null; //res.sendStatus(401);
     next();
-  });
+  } else {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        req.user = null;
+      } else {
+        req.user = user;
+      }
+
+      next();
+    });
+  }
 }
 
 module.exports = routerTodos;
