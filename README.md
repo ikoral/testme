@@ -121,14 +121,14 @@ We add **localhost:5000** as main **URL**. Change it according to your case. Bel
 
 		```
 		curl --location --request GET 'localhost:5000/api/users' \
-		--header 'Authorization: Bearer '<Your Login Token Here>'
+		--header 'Authorization: Bearer <Your Login Token Here>'
 		```
 		
 *	__get user by token:__ _localhost:5000/api/users/user_
 
 		```
 		curl --location --request GET 'localhost:5000/api/users/user' \
-		--header 'Authorization: Bearer '<Your Login Token Here>'
+		--header 'Authorization: Bearer <Your Login Token Here>'
 		´´´
 		
 *	__forgot password:__ _localhost:5000/api/users/forgot_
@@ -151,8 +151,46 @@ We add **localhost:5000** as main **URL**. Change it according to your case. Bel
 		--data-urlencode 'token=<Your password-reset token>'
 		
 **P.S.:** If you use unregistered email during forgot password call, you will get an error as _"your email is not registered"_
+		```
+
+* * *
+
+*	__create todo:__ _localhost:5000/api/todos/create_
+
+		```
+		curl --location --request POST 'localhost:5000/api/todos/create' \
+		--header 'Authorization: Bearer <Your Login Token Here>' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'todo=goto shopping'
+		```
+
+*	__get your todos:__ _localhost:5000/api/todos_
+
+		```
+		curl --location --request GET 'localhost:5000/api/todos' \
+		--header 'Authorization: Bearer <Your Login Token Here>'
+
+		```
+
+*	__delete your todo:__ _localhost:5000/api/todos/<todo_id>_
+
+		```
+		curl --location --request DELETE 'localhost:5000/api/todos/11' \
+		--header 'Authorization: Bearer <Your Login Token Here>'
 		
 		```
+
+*	__change your todo status:__ _localhost:5000/api/todos/<todo_id>_
+
+		```
+		curl --location --request PATCH 'localhost:5000/api/todos/6' \
+		--header 'Authorization: Bearer <Your Login Token Here>' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'todoStatus=1'
+		
+**P.S.:** you will get only todos belong to owner of token, not all todos, you can delete only your todo if given tidi_id is one of your todos, same is valid for update"_		
+		```
+
 
 ### FRONTEND DEV REPO  ###
 
