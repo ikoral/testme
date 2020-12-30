@@ -2,7 +2,7 @@
 
 This app was created as Sytem Under Test (SUT) for Software Test Training. 
 
-### Overview ###
+### OVERVIEW ###
 
 This application can be used various training related to Testing. It is all about fictitious media company, Chinook Media Enterprise. It is created according to system description you can check system description [here](#)
 Main Goal is creating web application near to real word modern web application and interact througth to training. Some parts of the application is not completed or some parts is left with some bugs on purpose.
@@ -21,7 +21,7 @@ Main Feature:
 * Application provides main authentication features (SignUp - SignIn - LogOut) with JasonWebToken
 * It use SQLite3 as DB and it is perfect for minimalist application. 
 
-### How do I get set up? ###
+### HOW DO I GET SET UP? ###
 
 * Clone the repository to your VM Server.
 * Run ``` npm init ```
@@ -77,20 +77,37 @@ NOTE: For development, keep these lines as they are.
 	*	RESET_URL=<your app url>/reset _For example_ www.ttl-tesme.com/reset_
 	*	SMTP_HOST=<Your SMTP Server> _As an SMTP Server testme Application uses ```Mail Catcher``` to simulate SMTP Server. You may change settings in ./mail-server.js and ./routes/user.js -> //SEND EMAIL_
 	
+* Run ```npm run start``` application will start on PORT 5000, when you go to ```http://localhost:500``` you should see index.html (This is normally under ```./public folder```) you may proxy via nginx oe Apache web server and redirect to your domain.
 	
-	
 
-* Database configuration
-* How to run tests
-* Deployment instructions
+### API CALLS ###
 
-### Contribution guidelines ###
+###### Endpoints ####
+* For API end point starts with ```/api```. <your URL>/api.
+* Currently there are two main endpoints
+	*	/users -> _<your FQD>/api/users_
+	*	/todos -> _<your FQD>/api/todos_
+* Source codes belong to these calls can be found under ./routes folder (user.js, todos.js)
+* You may find example of API calls in the ```./request.rest``` file.
 
-* Writing tests
-* Code review
-* Other guidelines
+##### Possbile calls: ####
+We add **localhost:5000** as main **URL**. Change it according to your case.
 
-### Who do I talk to? ###
+*	__register user:__	```localhost:5000/api/users/register```
+		
+		```
+		curl --location --request POST 'localhost:5000/api/users/register' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'first_name=peter' \
+		--data-urlencode 'last_name=lessen' \
+		--data-urlencode 'email=w@t' \
+		--data-urlencode 'password=12345'
+		
+		```
+
+### FRONTEND DEV REPO  ###
 
 * Repo owner or admin
 * Other community or team contact
+
+### FAKE SMTP SERVER (MAIL CATCHER) ###
