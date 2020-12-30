@@ -234,7 +234,7 @@ routerUsers.post("/login", function (req, res) {
     delete user.password;
     if (authenticated) {
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "8h",
+        expiresIn: "30m",
       });
 
       return res.json({

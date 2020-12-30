@@ -124,41 +124,52 @@ routerTodos.delete(
     } catch (err) {
       return res.status(400).json({
         status: false,
-        message: "Error Occurred!",
+        message: "Error occurred during delete!",
       });
     }
   }
 );
 
 //UPDATE TODO STATUS
-routerTodos.patch("/:id", (req, res) => {
-  const db = new sqlite3.Database("./database/InvoicingApp.db");
-  // validate data
-  // console.log(req.params.id);
-  // console.log(req.body.todoStatus);
-  if (isEmpty(req.body.todoStatus)) {
-    return res.status(400).json({
-      status: false,
-      message: "No status specified",
-    });
-  }
-
-  const todoStatus = req.body.todoStatus;
-
-  const sql = "UPDATE todos set status = ? WHERE id = ?";
-  const params = [todoStatus, req.params.id];
-
-  db.run(sql, params, function (err) {
-    if (err) {
-      res.status(400).json({ error: res.message });
-      return;
+routerTodos.patch(
+  "/:id",
+  multipartMiddleware,
+  checkToken,
+  async function (req, res) {
+    if (req.user == null) {
+      return res.status(401).json({
+        status: false,
+        message: "You haven't provided valid credential to update todo!",
+      });
     }
-    res.json({
-      message: "success",
-      changes: this.changes,
-    });
-  });
-});
+
+    if (isEmpty(req.body.todoStatus)) {
+      return res.status(400).json({
+        status: false,
+        message: "No status specified",
+      });
+    }
+
+    const todos = await checkTodo(req.user.id);
+    const todo = todos.filter((todo) => todo.id == req.params.id);
+    if (!todo.length)
+      return res.status(401).json({
+        status: false,
+        message: "You may not have this todo or it doesn't exist!",
+      });
+
+    const params = [req.body.todoStatus, req.params.id];
+    try {
+      const result = await updateTodo(params);
+      return res.status(result[0]).json(result[1]);
+    } catch (err) {
+      return res.status(400).json({
+        status: false,
+        message: "Error occurred during update!",
+      });
+    }
+  }
+);
 
 /***********************************
  ************** HELPER *************
@@ -214,6 +225,25 @@ function deleteTodo(id) {
       message = resolve([
         201,
         { todo_id: id, message: "deleted", changes: this.changes },
+      ]);
+      db.close();
+    });
+  });
+}
+
+function updateTodo(params) {
+  return new Promise((resolve) => {
+    let message = [];
+    let db = new sqlite3.Database(DB);
+    db.run("UPDATE todos set status = ? WHERE id = ?", params, function () {
+      // TODO: if error occurred add error message to resolve here (check reject-resolve)
+      message = resolve([
+        201,
+        {
+          todo_id: params[0],
+          message: "status changed",
+          changes: this.changes,
+        },
       ]);
       db.close();
     });
