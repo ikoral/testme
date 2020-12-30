@@ -71,11 +71,11 @@ NOTE: For development, keep these lines as they are.
 * Application runs on specific **PORT** if you set up your envirinmental variable (process.env.PORT), it will start PORT 5000 otherwise. You may change this settings in ./server.js file.
 * Create your ```.env``` file and add below variable inside it.
 
-	*	ACCESS_TOKEN_SECRET=AddYourSecretTokenHere
-	*	REFRESH_TOKEN_SECRET=AddYourRefreshTokenHere
-	*   RESET_TOKEN_SECRET=AddYourResetTokenHere
-	*	RESET_URL=<your app url>/reset _For example_ www.ttl-tesme.com/reset_
-	*	SMTP_HOST=<Your SMTP Server> _As an SMTP Server testme Application uses ```Mail Catcher``` to simulate SMTP Server. You may change settings in ./mail-server.js and ./routes/user.js -> //SEND EMAIL_
+	*	ACCESS_TOKEN_SECRET=<Add Your Secret Token Here>
+	*	REFRESH_TOKEN_SECRET=<Add Your Refresh Token Here>
+	*   RESET_TOKEN_SECRET=<Add Your Reset Token Here>
+	*	RESET_URL=<your app url>/reset _(For example_ www.example.com/reset)_
+	*	SMTP_HOST=<Your SMTP Server> _(As an SMTP Server testme Application uses ```Mail Catcher``` to simulate SMTP Server. You may change settings in ./mail-server.js and ./routes/user.js -> //SEND EMAIL)_
 	
 * Run ```npm run start``` application will start on PORT 5000, when you go to ```http://localhost:500``` you should see index.html (This is normally under ```./public folder```) you may proxy via nginx oe Apache web server and redirect to your domain.
 	
@@ -91,9 +91,9 @@ NOTE: For development, keep these lines as they are.
 * You may find example of API calls in the ```./request.rest``` file.
 
 ##### Possbile calls: ####
-We add **localhost:5000** as main **URL**. Change it according to your case.
+We add **localhost:5000** as main **URL**. Change it according to your case. Below after some calls you will get some tokens. Normally application does not reveal some of the tokens but for testing purposes you will get all the tokens after successful calls.
 
-*	__register user:__	```localhost:5000/api/users/register```
+*	__register user:__	_localhost:5000/api/users/register_
 		
 		```
 		curl --location --request POST 'localhost:5000/api/users/register' \
@@ -102,6 +102,55 @@ We add **localhost:5000** as main **URL**. Change it according to your case.
 		--data-urlencode 'last_name=lessen' \
 		--data-urlencode 'email=w@t' \
 		--data-urlencode 'password=12345'
+		
+		```
+		
+*	__login user:__	_localhost:5000/api/users/login_
+
+		´´´
+		curl -H --location --request POST 'localhost:5000/api/users/login' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'email=w@y' \
+		--data-urlencode 'password=aaa'
+		
+		
+**P.S.:** When you successfully login, you will get token, use this token for other calls when necessary. Only Reset Password call needs reset token, other calls use this login token.
+		´´´
+	
+*	__get users:__ _localhost:5000/api/users_
+
+		```
+		curl --location --request GET 'localhost:5000/api/users' \
+		--header 'Authorization: Bearer '<Your Login Token Here>'
+		```
+		
+*	__get user by token:__ _localhost:5000/api/users/user_
+
+		```
+		curl --location --request GET 'localhost:5000/api/users/user' \
+		--header 'Authorization: Bearer '<Your Login Token Here>'
+		´´´
+		
+*	__forgot password:__ _localhost:5000/api/users/forgot_
+
+		```
+		curl --location --request POST 'localhost:5000/api/users/forgot' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'email=w@y'
+		
+**P.S.:** When you successfully send your forgot request, you will get reset-token, you can use this token only for password reset
+		```
+
+*	__reset password:__ _localhost:5000/api/users/reset_
+
+		```
+		curl --location --request POST 'localhost:5000/api/users/reset' \
+		--header 'Content-Type: application/x-www-form-urlencoded' \
+		--data-urlencode 'password=456' \
+		--data-urlencode 'password_confirm=456' \
+		--data-urlencode 'token=<Your password-reset token>'
+		
+**P.S.:** If you use unregistered email during forgot password call, you will get an error as _"your email is not registered"_
 		
 		```
 
