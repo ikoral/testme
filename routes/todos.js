@@ -25,12 +25,7 @@ routerTodos.post("/create", multipartMiddleware, checkToken, (req, res) => {
   if (isEmpty(req.body.todo)) {
     errors.push("No task specified");
   }
-  //   if (isEmpty(req.params.id)) {
-  //     errors.push("No user specified");
-  //   }
-  //   if (user.id !== req.params.id) {
-  //     errors.push("Wrong request- user not authorized!");
-  //   }
+
   if (errors.length) {
     res.status(401).json({
       status: false,
@@ -62,6 +57,7 @@ routerTodos.post("/create", multipartMiddleware, checkToken, (req, res) => {
       id: this.lastID,
     });
   });
+  db.close();
 });
 
 // GET ALL TODOS
@@ -97,23 +93,42 @@ routerTodos.get("/", multipartMiddleware, checkToken, function (req, res) {
       todos: rows,
     });
   });
+  db.close();
 });
 
 //DELETE TODO
-routerTodos.delete("/:id", multipartMiddleware, (req, res, next) => {
-  let db = new sqlite3.Database("./database/InvoicingApp.db");
-  db.run(
-    "DELETE FROM todos WHERE id = ?",
-    req.params.id,
-    function (err, result) {
-      if (err) {
-        res.status(400).json({ error: res.message });
-        return;
-      }
-      res.json({ message: "deleted", changes: this.changes });
+routerTodos.delete(
+  "/:id",
+  multipartMiddleware,
+  checkToken,
+  async function (req, res) {
+    if (req.user == null) {
+      return res.status(401).json({
+        status: false,
+        message: "You haven't provided valid credential to delete todo!",
+      });
     }
-  );
-});
+    const todos = await checkTodo(req.user.id);
+    console.log("delete todo", todos);
+    const todo = todos.filter((todo) => todo.id == req.params.id);
+    if (!todo.length)
+      return res.status(401).json({
+        status: false,
+        message: "You may not have this todo or it doesn't exist!",
+      });
+    // const result = await resolveAfter2Seconds();
+    // console.log(result);
+    try {
+      const result = await deleteTodo(todo[0].id);
+      return res.status(result[0]).json(result[1]);
+    } catch (err) {
+      return res.status(400).json({
+        status: false,
+        message: "Error Occurred!",
+      });
+    }
+  }
+);
 
 //UPDATE TODO STATUS
 routerTodos.patch("/:id", (req, res) => {
@@ -166,10 +181,49 @@ function checkToken(req, res, next) {
       } else {
         req.user = user;
       }
-
       next();
     });
   }
+}
+
+function checkTodo(user_id) {
+  return new Promise((resolve) => {
+    //TODO: Check if this todo belongs to this user
+    let db = new sqlite3.Database(DB);
+    let sql = "SELECT * from todos WHERE user_id = ?";
+    let todos = [];
+
+    db.all(sql, user_id, function (err, rows) {
+      if (err) {
+        // errors.push("Error ocurred");
+        todos = null;
+      }
+      todos = resolve(rows);
+    });
+
+    db.close();
+    return todos;
+  });
+}
+
+function deleteTodo(id) {
+  return new Promise((resolve) => {
+    let message = [];
+    let db = new sqlite3.Database(DB);
+    db.run("DELETE FROM todos WHERE id = ?", id, function (err) {
+      message = resolve([
+        201,
+        { todo_id: id, message: "deleted", changes: this.changes },
+      ]);
+      db.close();
+    });
+  });
+}
+
+function resolveAfter2Seconds() {
+  return new Promise((resolve) => {
+    resolve("resolved");
+  });
 }
 
 module.exports = routerTodos;

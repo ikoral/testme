@@ -5,14 +5,14 @@ Content-Type: application/json
 {
     "first_name": "ilhan",
     "last_name": "Koral",
-    "email": "w@r",
+    "email": "w@o",
     "password": "12345"
 }
 
 ###
 
 GET http://localhost:5000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJwZXRlciIsImxhc3ROYW1lIjoibGVzc2VuIiwiZW1haWwiOiJ3QHkiLCJyb2xlaWQiOm51bGwsImlhdCI6MTYwODUxMzE1MCwiZXhwIjoxNjA4NTE0MDUwfQ.QC1PcwtsPRJ5X1DpcmPkApzSecxthhPbvCzYHYIQ3xc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZmlyc3ROYW1lIjoicGV0ZXIiLCJsYXN0TmFtZSI6Imxlc3NlbiIsImVtYWlsIjoid0B5Iiwicm9sZWlkIjpudWxsLCJpYXQiOjE2MDkxOTQ4NDUsImV4cCI6MTYwOTE5NTc0NX0.G14YrSZbVB26h7Um1o0W1eibK6mNZPr-18-pH81Y7J0
 
 ###
 
@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
     "email": "w@y",
-    "password": "12345"
+    "password": "aaa"
 }
 
 ###
