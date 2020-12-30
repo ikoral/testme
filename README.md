@@ -23,10 +23,12 @@ Main Feature:
 
 ### How do I get set up? ###
 
+* Clone the repository to your VM Server.
+* Run ``` npm init ```
 * This repository is ready for production. It contains static (already built) files as well as whole backend. Front static files are inside public folder.
 * Current structure is ready to deploy **HEROKU** but you may deploy somewhere else, for example to a VM you can deploy. Before deploy to VM change below lines.
 
-	*	Go to ./server.js and change the below lines and remove if condition. Code files **from**;
+	*	Go to ./server.js and change the below lines and remove if condition;
 	
 #### Remove If Block ####
 	
@@ -42,7 +44,7 @@ Main Feature:
 ```
 
 
-#### change to this ####
+#### After change the lines should be ####
 		
 	
 ```	
@@ -58,16 +60,26 @@ Main Feature:
 #### And remove this part or comment out ####
 
 ```
-// GET MAIN
-app.get("/", function (req, res) {
-  res.send("Welcome to Chinook Enterprise");
-});
+		// GET MAIN
+		app.get("/", function (req, res) {
+		  res.send("Welcome to Chinook Enterprise");
+		});
 ```
-
+NOTE: For development, keep these lines as they are.
 
 	
-* Configuration
-* Dependencies
+* Application runs on specific **PORT** if you set up your envirinmental variable (process.env.PORT), it will start PORT 5000 otherwise. You may change this settings in ./server.js file.
+* Create your ```.env``` file and add below variable inside it.
+
+	*	ACCESS_TOKEN_SECRET=AddYourSecretTokenHere
+	*	REFRESH_TOKEN_SECRET=AddYourRefreshTokenHere
+	*   RESET_TOKEN_SECRET=AddYourResetTokenHere
+	*	RESET_URL=<your app url>/reset _For example_ www.ttl-tesme.com/reset_
+	*	SMTP_HOST=<Your SMTP Server> _As an SMTP Server testme Application uses ```Mail Catcher``` to simulate SMTP Server. You may change settings in ./mail-server.js and ./routes/user.js -> //SEND EMAIL_
+	
+	
+	
+
 * Database configuration
 * How to run tests
 * Deployment instructions
