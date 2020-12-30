@@ -1,6 +1,6 @@
 # ttl-testme Web Application (SUT)#
 
-This app was created as Sytem Under Test (SUT) for Software Test Training. 
+This app was created as Sytem Under Test (SUT) for Software Test Training. **Currently app is running HEROKU, [click to here](https://ttl-testme.herokuapp.com/) to access current cersion**
 
 ### OVERVIEW ###
 
@@ -194,7 +194,13 @@ We add **localhost:5000** as main **URL**. Change it according to your case. Bel
 
 ### FRONTEND DEV REPO  ###
 
-* Repo owner or admin
-* Other community or team contact
+* FrontEnd is written in Vue.js and you can find development repo [here](https://bitbucket.org/ttlbe/testme-client/src/master/)
+* Clone the repo
+* Run ``` npm init ```
+* Run ``` npm run serve ```
 
 ### FAKE SMTP SERVER (MAIL CATCHER) ###
+MailCatcher runs a super simple SMTP server which catches any message sent to it to display in a web interface. When we use **forgot password** API call, it triggers Node.js and it deliver message to smtp://<MailCatcher Server>:1025
+instead of our default SMTP server, then we can check out http://<MailCatcher Server>:1080 to see the mail that's arrived so far. We are using same host both for distrubute and collect email. Our application use http://167.86.107.223/
+as a MAilCatcher SMTP Server. To see SMTP server in action go to our [instance](http://167.86.107.223:1080/)
+
