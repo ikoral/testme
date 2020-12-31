@@ -24,7 +24,7 @@ Main Feature:
 ### HOW DO I GET SET UP? ###
 
 * Clone the repository to your VM Server.
-* Run ``` npm init ```
+* Run ``` npm install ```
 * This repository is ready for production. It contains static (already built) files as well as whole backend. Front static files are inside public folder.
 * Current structure is ready to deploy **HEROKU** but you may deploy somewhere else, for example to a VM you can deploy. Before deploy to VM change below lines.
 
@@ -196,7 +196,7 @@ We add **localhost:5000** as main **URL**. Change it according to your case. Bel
 
 * FrontEnd is written in Vue.js and you can find development repo [here](https://bitbucket.org/ttlbe/testme-client/src/master/)
 * Clone the repo
-* Run ``` npm init ```
+* Run ``` npm install ```
 * Run ``` npm run serve ```
 
 ### FAKE SMTP SERVER (MAIL CATCHER) ###
