@@ -109,7 +109,7 @@ routerTodos.delete(
       });
     }
     const todos = await checkTodo(req.user.id);
-    console.log("delete todo", todos);
+    //console.log("delete todo", todos);
     const todo = todos.filter((todo) => todo.id == req.params.id);
     if (!todo.length)
       return res.status(401).json({
@@ -240,7 +240,7 @@ function updateTodo(params) {
       message = resolve([
         201,
         {
-          todo_id: params[0],
+          todo_id: params[1],
           message: "status changed",
           changes: this.changes,
         },
