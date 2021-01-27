@@ -43,6 +43,7 @@ routerTodos.post("/create", multipartMiddleware, checkToken, (req, res) => {
   };
   const sql = "INSERT INTO todos (todo, user_id, status) VALUES (?,?,?)";
   const params = [data.todo, data.userId, data.status];
+
   db.run(sql, params, function (err) {
     if (err) {
       res.status(400).json({
@@ -168,6 +169,78 @@ routerTodos.patch(
         message: "Error occurred during update!",
       });
     }
+  }
+);
+
+//MARK ALL TODOS STATUS
+routerTodos.put(
+  "/all",
+  multipartMiddleware,
+  checkToken,
+  async function (req, res) {
+    if (req.user == null) {
+      return res.status(401).json({
+        status: false,
+        message: "You haven't provided valid credential to update todo!",
+      });
+    }
+
+    if (isEmpty(req.body.allStatus)) {
+      return res.status(400).json({
+        status: false,
+        message: "No status specified",
+      });
+    }
+
+    const params = [req.body.allStatus, req.user.id];
+    let db = new sqlite3.Database(DB);
+    let sql = "UPDATE todos set status = ? WHERE user_id = ?";
+
+    db.run(sql, params, function (err) {
+      if (err) {
+        res.status(400).json({
+          status: false,
+          message: err.message,
+        });
+        return;
+      }
+      res.status(201).json({
+        message: "All todos status updated",
+        status: req.body.allStatus,
+      });
+    });
+
+    db.close();
+  }
+);
+
+//DELETE ALL TODOS
+routerTodos.delete(
+  "/del/all",
+  multipartMiddleware,
+  checkToken,
+  async function (req, res) {
+    if (req.user == null) {
+      return res.status(401).json({
+        status: false,
+        message: "You haven't provided valid credential to delete all todo!",
+      });
+    }
+
+    let db = new sqlite3.Database(DB);
+    try {
+      db.run("DELETE FROM todos WHERE user_id = ?", req.user.id, function () {
+        res.status(200).json({
+          message: "All todos deleted",
+        });
+      });
+    } catch (err) {
+      return res.status(400).json({
+        status: false,
+        message: `Error occurred during delete all todos!: ${err.message}`,
+      });
+    }
+    db.close();
   }
 );
 
