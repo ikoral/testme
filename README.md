@@ -202,6 +202,6 @@ We add **localhost:5000** as main **URL**. Change it according to your case. Bel
 ### FAKE SMTP SERVER (MAIL CATCHER) ###
 MailCatcher runs a super simple SMTP server which catches any message sent to it to display in a web interface. When we use **forgot password** API call, it triggers Node.js and it deliver message to smtp://<MailCatcher Server>:1025
 instead of our default SMTP server, then we can check out http://<MailCatcher Server>:1080 to see the mail that's arrived so far. We are using same host to distrubute and collect emails. Our application use http://167.86.107.223/
-as a MAilCatcher SMTP Server. To see SMTP server in action go to our [instance](http://167.86.107.223:1080/)
+as a MAilCatcher SMTP Server. To see SMTP server in action go to our [instance](http://167.86.107.223:1080/) **Warning** Currently SMTP Server is stopped. Before test inform system admin to start SMTP Server.
 
 ![Mail Catcher](https://user-images.githubusercontent.com/40534340/103385038-184ddc00-4af9-11eb-8d63-a49a8aafba3f.PNG)
