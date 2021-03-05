@@ -97,6 +97,42 @@ routerTodos.get("/", multipartMiddleware, checkToken, function (req, res) {
   db.close();
 });
 
+// GET TODO BY ID
+routerTodos.get("/:id", multipartMiddleware, checkToken, function (req, res) {
+  const user = req.user;
+  let errors = [];
+
+  // validate data
+  if (user == null) errors.push("Not valid token! You cannot get this todo");
+
+  if (errors.length) {
+    res.status(401).json({
+      status: false,
+      message: errors.join(", "),
+    });
+    return;
+  }
+
+  let db = new sqlite3.Database(DB);
+  let sql = `SELECT todo FROM todos
+  WHERE user_id='${req.user.id}' and id = '${req.params.id}'`;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      res.status(401).json({
+        status: false,
+        message: err.message,
+      });
+      return;
+    }
+    return res.status(200).json({
+      status: true,
+      todos: rows,
+    });
+  });
+  db.close();
+});
+
 //DELETE TODO
 routerTodos.delete(
   "/:id",
