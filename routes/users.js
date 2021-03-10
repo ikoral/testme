@@ -50,7 +50,7 @@ routerUsers.post("/register", multipartMiddleware, function (req, res) {
           message: err.message,
         });
       } else {
-        return res.json({
+        return res.status(201).json({
           status: true,
           message: "User Created",
         });
@@ -82,6 +82,13 @@ routerUsers.post("/reset", function (req, res) {
     return res.status(401).json({
       status: false,
       message: "Password field are required",
+    });
+  }
+
+  if (!(req.body.password === req.body.password_confirm)) {
+    return res.status(401).json({
+      status: false,
+      message: "Password fields are not match!",
     });
   }
 

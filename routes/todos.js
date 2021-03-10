@@ -208,6 +208,47 @@ routerTodos.patch(
   }
 );
 
+//UPDATE TODO BY ID
+routerTodos.put(
+  "/:id",
+  multipartMiddleware,
+  checkToken,
+  async function (req, res) {
+    if (req.user == null) {
+      return res.status(401).json({
+        status: false,
+        message: "You haven't provided valid credential to update todo!",
+      });
+    }
+
+    if (isEmpty(req.body.todo)) {
+      return res.status(400).json({
+        status: false,
+        message: "No task (todo) specified",
+      });
+    }
+
+    const todos = await checkTodo(req.user.id);
+    const todo = todos.filter((todo) => todo.id == req.params.id);
+    if (!todo.length)
+      return res.status(401).json({
+        status: false,
+        message: "You may not have this todo or it doesn't exist!",
+      });
+
+    const params = [req.body.todo, req.params.id];
+    try {
+      const result = await updateTodoTask(params);
+      return res.status(result[0]).json(result[1]);
+    } catch (err) {
+      return res.status(400).json({
+        status: false,
+        message: "Error occurred during update!",
+      });
+    }
+  }
+);
+
 //MARK ALL TODOS STATUS
 routerTodos.put(
   "/all",
@@ -351,6 +392,25 @@ function updateTodo(params) {
         {
           todo_id: params[1],
           message: "status changed",
+          changes: this.changes,
+        },
+      ]);
+      db.close();
+    });
+  });
+}
+
+function updateTodoTask(params) {
+  return new Promise((resolve) => {
+    let message = [];
+    let db = new sqlite3.Database(DB);
+    db.run("UPDATE todos set todo = ? WHERE id = ?", params, function () {
+      // TODO: if error occurred add error message to resolve here (check reject-resolve)
+      message = resolve([
+        201,
+        {
+          todo_id: params[1],
+          message: "todo changed",
           changes: this.changes,
         },
       ]);
