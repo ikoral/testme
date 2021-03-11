@@ -251,7 +251,7 @@ routerTodos.put(
 
 //MARK ALL TODOS STATUS
 routerTodos.put(
-  "/all",
+  "/status/all",
   multipartMiddleware,
   checkToken,
   async function (req, res) {
